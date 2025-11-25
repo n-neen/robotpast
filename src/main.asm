@@ -170,7 +170,7 @@ speed: {
         
         lda !camerasubspeed1
         clc
-        adc #$0200
+        adc !kscrollconstant1
         sta !camerasubspeed1
         lda !cameraspeed1
         adc #$0000
@@ -178,7 +178,7 @@ speed: {
         
         lda !camerasubspeed2
         clc
-        adc #$0100
+        adc !kscrollconstant2
         sta !camerasubspeed2
         lda !cameraspeed2
         adc #$0000
@@ -186,7 +186,7 @@ speed: {
         
         lda !camerasubspeed3
         clc
-        adc #$0020
+        adc !kscrollconstant3
         sta !camerasubspeed3
         lda !cameraspeed3
         adc #$0000
@@ -194,7 +194,7 @@ speed: {
         
         lda !camerasubspeed4
         clc
-        adc #$0004
+        adc !kscrollconstant4
         sta !camerasubspeed4
         lda !cameraspeed4
         adc #$0000
@@ -211,7 +211,7 @@ speed: {
         
         lda !camerasubspeed1
         sec
-        sbc #$0200
+        sbc !kscrollconstant1
         sta !camerasubspeed1
         lda !cameraspeed1
         sbc #$0000
@@ -219,7 +219,7 @@ speed: {
         
         lda !camerasubspeed2
         sec
-        sbc #$0100
+        sbc !kscrollconstant1
         sta !camerasubspeed2
         lda !cameraspeed2
         sbc #$0000
@@ -227,7 +227,7 @@ speed: {
         
         lda !camerasubspeed3
         sec
-        sbc #$0020
+        sbc !kscrollconstant3
         sta !camerasubspeed3
         lda !cameraspeed3
         sbc #$0000
@@ -235,7 +235,7 @@ speed: {
         
         lda !camerasubspeed4
         sec
-        sbc #$0004
+        sbc !kscrollconstant4
         sta !camerasubspeed4
         lda !cameraspeed4
         sbc #$0000

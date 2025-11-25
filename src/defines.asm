@@ -76,6 +76,12 @@
 !kscrollmodeleft        =       $0001
 !kscrollmoderight       =       $0002
 
+;scroll constants
+!kscrollconstant1       =       #$0100
+!kscrollconstant2       =       #$0080
+!kscrollconstant3       =       #$0020
+!kscrollconstant4       =       #$0002
+
 ;vram constants
 ;before shifting into the format needed to actually use
 ;with the ppu registers
