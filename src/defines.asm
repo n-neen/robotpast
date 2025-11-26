@@ -54,6 +54,8 @@
 !cameraspeed3       =       !scrollstart+46
 !cameraspeed4       =       !scrollstart+48
 
+!scrolltimer        =       !scrollstart+50 ;timer for how long to wait on title before autoscroll
+
 ;===========================================================================================
 ;======================================== constants ========================================
 ;===========================================================================================
@@ -67,7 +69,7 @@
 !kstatesplashsetup      =       #$0000
 !kstatesplash           =       #$0001
 !kstatenewgame          =       #$0002
-!kstategameplayvector   =       #$0003
+!kstategameplay         =       #$0003
 
 !kcontrollerpressedbuttonsarraylength       = #$0008
 
@@ -76,11 +78,14 @@
 !kscrollmodeleft        =       $0001
 !kscrollmoderight       =       $0002
 
-;scroll constants
-!kscrollconstant1       =       #$0100
-!kscrollconstant2       =       #$0080
-!kscrollconstant3       =       #$0020
-!kscrollconstant4       =       #$0002
+;scroll speed constants
+!kscrollconstant1       =       #$0100/4
+!kscrollconstant2       =       #$0080/4
+!kscrollconstant3       =       #$0020/3
+!kscrollconstant4       =       #$0002/2
+
+!kscrollautoaccelmax    =       #$0300  ;how long to accelerate (frames)
+!kscrolltimer           =       #$0380  ;how long to wait before accelerating
 
 ;vram constants
 ;before shifting into the format needed to actually use

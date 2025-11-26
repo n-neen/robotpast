@@ -18,6 +18,27 @@ main: {
 }
 
 
+newgame: {
+    ;setup for gameplay
+    
+    ;initialize player
+    ;load level
+    ;load enemies
+    
+    lda !kstategameplay
+    sta !gamestate
+    
+    rts
+}
+
+
+gameplayvector: {
+    ;see gameplay.asm
+    jsl game_play
+    rts
+}
+
+
 splashsetup: {
     jsr screenoff
     
@@ -31,22 +52,25 @@ splashsetup: {
     jsl paltest
     
     sep #$20
-    {
-        lda #%00001001          ;main screen
-        sta $212c
-        
-        lda #%00000110          ;sub screen
-        sta $212d
-        
-        lda #%10110111          ;color math layers
-        sta $2131
-        
-        lda #%00000011
-        sta $2130
-    }
+    
+    lda #%00001001          ;main screen
+    sta $212c
+    
+    lda #%00000110          ;sub screen
+    sta $212d
+    
+    lda #%10110111          ;color math layers
+    sta $2131
+    
+    lda #%00000011
+    sta $2130
+    
     rep #$20
     
+    jsr waitfornmi
     jsr screenon
+    
+    stz !scrollmode
     
     lda !kstatesplash
     sta !gamestate
@@ -66,7 +90,8 @@ getinput: {
     .st: {
         bit !kst
         beq ..nost
-            ;jsr game_pause
+            ldx !kstatenewgame
+            stx !gamestate
         ..nost:
     }
     
@@ -249,7 +274,9 @@ speed: {
 
 
 splash: {
-    jsl getinput
+    ;jsl getinput
+    
+    
     jsr splash_scrollhandle
     jsr cameraspeedclamp
     rts
@@ -270,7 +297,17 @@ splash: {
     }
     
     .nonescroll: {
-        rts
+        lda !scrolltimer
+        inc
+        sta !scrolltimer
+        cmp !kscrolltimer
+        bmi +
+        
+        lda #!kscrollmoderight
+        sta !scrollmode
+        stz !scrolltimer
+        
+    +   rts
     }
     
     
@@ -312,6 +349,14 @@ splash: {
     }
     
     .scrollright: {
+        lda !scrolltimer
+        inc
+        sta !scrolltimer
+        cmp !kscrollautoaccelmax
+        bpl +
+        jsr speed_up
+        +
+        
         lda !bg1xsubpixel
         sec
         sbc !camerasubspeed1
@@ -377,19 +422,6 @@ cameraspeedclamp: {
     
     ++++
     stz !cameraspeed4
-    rts
-}
-
-
-newgame: {
-    ;setup for gameplay
-    rts
-}
-
-
-gameplayvector: {
-    ;jsl gameplay
-    ;in another module
     rts
 }
 

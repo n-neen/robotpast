@@ -34,6 +34,7 @@ org $808000
     incsrc "./src/boot.asm"
     incsrc "./src/main.asm"
     incsrc "./src/loading.asm"
+    incsrc "./src/gameplay.asm"
     
 org $c10000
     incsrc "./data/inc/c1.asm"
