@@ -1,11 +1,23 @@
-;defines
+;===========================================================================================
+;===========================================================================================
+;===========================================================================================
+;===================================     DEFINES     =======================================
+;===========================================================================================
+;===========================================================================================
+;===========================================================================================
 
-!gamestate          = $40
-!nmiflag            = $42
-!nmicounter         = $44
-!lagcounter         = $46
-!screenbrightness   = $48
-!controller         = $4a
+;wram
+
+;====================================  direct page  ========================================
+
+
+!gamestate              = $40
+!nmiflag                = $42
+!nmicounter             = $44
+!lagcounter             = $46
+!screenbrightness       = $48
+!controller             = $4a
+!startbuttondestmode    = $4c   ;game state to advance to when start is pressed
 
 !controllertimer                = $5e
 !controllerpressedbuttonsarray  = $60
@@ -56,13 +68,55 @@
 
 !scrolltimer        =       !scrollstart+50 ;timer for how long to wait on title before autoscroll
 
+
+
+
+
+!messageboxstart                    =       $1e00
+!messageboxuploadflag               =       !messageboxstart+0
+!messageboxlength                   =       !messageboxstart+2
+!messageboxstate                    =       !messageboxstart+4
+!messageboxindex                    =       !messageboxstart+6
+!messageboxstartingposition         =       !messageboxstart+8
+
+
+;============================================= 7e ==========================================
+
+
+!msgtilemapbufferlong    =        $7ef700
+!msgtilemapbuffershort   =        $f700
+!msgtilemapbufferbank    =        $7e
+   
+
+
+
+
+;============================================= 7f ==========================================
+
+;some of these are reused based on game state!
+
+;unused, abandoned plotter
+
+!bg1tilemapbufferlong       =       $7f0000
+!bg1tilemapbuffershort      =       $0000
+!bg1tilemapbufferbank       =       $7f
+!bg1tilemapbuffersize       =       $0800
+
+!framegfxbufferlong         =       $7f0800
+!framegfxbuffershort        =       $0800
+!framegfxbufferbank         =       $7f
+!framegfxbuffersize         =       $4000
+
+
+
 ;===========================================================================================
 ;======================================== constants ========================================
 ;===========================================================================================
 
 ;constants for module banks
 
-!testbankshort       =      (test&$7f0000)>>16
+!testbankshort       =      (test&$7f0000)>>16              ;title screen graphics and tilemaps
+!plotbankshort       =      (plot&$7f0000)>>16              ;dot plotter module
 
 ;game states
 
@@ -70,6 +124,8 @@
 !kstatesplash           =       #$0001
 !kstatenewgame          =       #$0002
 !kstategameplay         =       #$0003
+!kstatemessageboxsetup  =       #$0004
+!kstatemessagebox       =       #$0005
 
 !kcontrollerpressedbuttonsarraylength       = #$0008
 
@@ -87,7 +143,11 @@
 !kscrollautoaccelmax    =       #$0300  ;how long to accelerate (frames)
 !kscrolltimer           =       #$0380  ;how long to wait before accelerating
 
-;vram constants
+
+!msgboxterminator       =       $9f
+
+
+;================================ vram address constants ===================================
 ;before shifting into the format needed to actually use
 ;with the ppu registers
 

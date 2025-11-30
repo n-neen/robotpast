@@ -2,19 +2,21 @@
 
 
 
+
 test: {
+    
     .map: {
         ..1:
-            incbin ./data/tilemaps/layer1_1.map
+            incbin ./data/tilemaps/layer1_4.map
+            incbin ./data/tilemaps/layer1_3.map
             incbin ./data/tilemaps/layer1_2.map
             incbin ./data/tilemaps/layer1_1.map
-            incbin ./data/tilemaps/layer1_2.map
         
         ..2:
-            incbin ./data/tilemaps/layer2_1.map
+            incbin ./data/tilemaps/layer2_4.map
+            incbin ./data/tilemaps/layer2_3.map
             incbin ./data/tilemaps/layer2_2.map
             incbin ./data/tilemaps/layer2_1.map
-            incbin ./data/tilemaps/layer2_2.map
         
         ..3:
             incbin ./data/tilemaps/layer3_1.map
@@ -36,8 +38,3 @@ test: {
     .gfx4:
         incbin ./data/gfx/bg4.chr
 }
-
-print "end of test data: ", pc
-
-org $c1ffff
-db $ff

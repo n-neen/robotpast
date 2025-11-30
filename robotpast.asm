@@ -28,24 +28,43 @@ hirom
 incsrc "./src/defines.asm"
 
 org $c00000
-    ;
+    print "end $c0: ", pc
 
 org $808000
     incsrc "./src/boot.asm"
     incsrc "./src/main.asm"
     incsrc "./src/loading.asm"
     incsrc "./src/gameplay.asm"
+    incsrc "./src/msg.asm"
+    print "end $80: ", pc
     
 org $c10000
     incsrc "./data/inc/c1.asm"
+    print "end $c1: ", pc
     
 org $c20000
+    ;
+    print "end $c2: ", pc
+    
 org $c30000
+    ;
+    print "end $c3: ", pc
+    
 org $c40000
+    ;
+    print "end $c4: ", pc
+    
 org $c50000
+    ;
+    print "end $c5: ", pc
+    
 org $c60000
+    ;
+    print "end $c6: ", pc
+    
 org $c70000
-
+    ;
+    print "end $c7: ", pc
 
 ;===========================================================================================
 ;==================================               ==========================================

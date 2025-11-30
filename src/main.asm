@@ -14,7 +14,47 @@ main: {
         dw splash               ;1
         dw newgame              ;2
         dw gameplayvector       ;3
+        dw messageboxsetup      ;4
+        dw messagebox           ;5
     }
+}
+
+messagebox: {
+    lda #$0001
+    sta !messageboxuploadflag
+    
+    jsl msg_boxwait
+    
+    rts
+}
+
+
+messageboxsetup: {
+    jsr screenoff
+    
+    sep #$20
+    lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
+    sta $210a
+    
+    
+    
+    ;maybe color math settings too
+    ;maybe hdma
+    ;maybe disable other layers
+    
+    rep #$20
+    
+    ;need bg4 tilemap buffer. at $7ef700
+    
+    lda !messageboxindex
+    jsl msg_boxwrite
+    
+    lda !kstatemessagebox
+    sta !gamestate
+    
+    jsr screenon
+    
+    rts
 }
 
 
@@ -25,8 +65,9 @@ newgame: {
     ;load level
     ;load enemies
     
-    lda !kstategameplay
-    sta !gamestate
+    lda #$0002
+    ldx #$000e
+    jsl msg_call
     
     rts
 }
@@ -62,7 +103,7 @@ splashsetup: {
     lda #%10110111          ;color math layers
     sta $2131
     
-    lda #%00000011
+    lda #%00000011          ;enable color math
     sta $2130
     
     rep #$20
@@ -71,6 +112,9 @@ splashsetup: {
     jsr screenon
     
     stz !scrollmode
+    
+    lda !kstatenewgame              ;set next state (newgame)
+    sta !startbuttondestmode        ;for when start button is pressed
     
     lda !kstatesplash
     sta !gamestate
@@ -90,7 +134,7 @@ getinput: {
     .st: {
         bit !kst
         beq ..nost
-            ldx !kstatenewgame
+            ldx !startbuttondestmode
             stx !gamestate
         ..nost:
     }
@@ -105,46 +149,52 @@ getinput: {
     .up: {                                      ;dpad start
         bit !kup
         beq ..noup
-            ;
+            dec !bg1yscroll
+            dec !bg1yscroll
+            
+            dec !bg2yscroll
         ..noup:
     }
     
     .dn: {                                      ;
         bit !kdn
         beq ..nodn
-            ;
+            inc !bg1yscroll
+            inc !bg1yscroll
+            
+            inc !bg2yscroll
         ..nodn:
     }
     
     .lf: {                                      ;
         bit !klf
         beq ..nolf
-            ldx #!kscrollmodeleft
-            stx !scrollmode
+            ;ldx #!kscrollmodeleft
+            ;stx !scrollmode
         ..nolf:
     }
     
     .rt: {                                      ;
         bit !krt
         beq ..nort
-            ldx #!kscrollmoderight
-            stx !scrollmode
+            ;ldx #!kscrollmoderight
+            ;stx !scrollmode
         ..nort:
     }                                           ;dpad end
     
     .a: {
         bit !ka
         beq ..noa
-            stz !scrollmode
-            stz !cameraspeed1
-            stz !cameraspeed2
-            stz !cameraspeed3
-            stz !cameraspeed4
+            ;stz !scrollmode
+            ;stz !cameraspeed1
+            ;stz !cameraspeed2
+            ;stz !cameraspeed3
+            ;stz !cameraspeed4
             
-            stz !camerasubspeed1
-            stz !camerasubspeed2
-            stz !camerasubspeed3
-            stz !camerasubspeed4
+            ;stz !camerasubspeed1
+            ;stz !camerasubspeed2
+            ;stz !camerasubspeed3
+            ;stz !camerasubspeed4
         ..noa:
     }
     
@@ -172,14 +222,14 @@ getinput: {
     .l: {
         bit !kl
         beq ..nol
-            jsr speed_down
+            ;jsr speed_down
         ..nol:
     }
     
     .r: {
         bit !kr
         beq ..nor
-            jsr speed_up
+            ;jsr speed_up
         ..nor:
     }
     
@@ -274,7 +324,7 @@ speed: {
 
 
 splash: {
-    ;jsl getinput
+    jsl getinput
     
     
     jsr splash_scrollhandle
@@ -307,7 +357,8 @@ splash: {
         sta !scrollmode
         stz !scrolltimer
         
-    +   rts
+        +
+        rts
     }
     
     
@@ -350,14 +401,14 @@ splash: {
     
     .scrollright: {
         lda !scrolltimer
-        inc
-        sta !scrolltimer
         cmp !kscrollautoaccelmax
         bpl +
+        inc
+        sta !scrolltimer
         jsr speed_up
         +
         
-        lda !bg1xsubpixel
+        lda !bg1xsubpixel       ;bg1 subspeed +constant, carry to bg1 pixel scroll
         sec
         sbc !camerasubspeed1
         sta !bg1xsubpixel
@@ -365,7 +416,7 @@ splash: {
         sbc !cameraspeed1
         sta !bg1xscroll
         
-        lda !bg2xsubpixel
+        lda !bg2xsubpixel       ;bg2 subspeed +constant, carry to bg1 pixel scroll
         sec
         sbc !camerasubspeed2
         sta !bg2xsubpixel
@@ -373,7 +424,7 @@ splash: {
         sbc !cameraspeed2
         sta !bg2xscroll
         
-        lda !bg3xsubpixel
+        lda !bg3xsubpixel       ;bg3 subspeed +constant, carry to bg1 pixel scroll
         sec
         sbc !camerasubspeed3
         sta !bg3xsubpixel
@@ -381,7 +432,7 @@ splash: {
         sbc !cameraspeed3
         sta !bg3xscroll
         
-        lda !bg4xsubpixel
+        lda !bg4xsubpixel       ;bg4 subspeed +constant, carry to bg1 pixel scroll
         sec
         sbc !camerasubspeed4
         sta !bg4xsubpixel
@@ -456,6 +507,12 @@ nmi: {
     ;nmi stuf goez here
     jsr readcontroller
     jsr updatescrolls
+    
+    lda !messageboxuploadflag
+    beq +
+    jsl msg_uploadtilemap
+    stz !messageboxuploadflag
+    +
     
     sep #$20
     lda !screenbrightness

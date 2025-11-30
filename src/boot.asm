@@ -29,7 +29,7 @@ init: {
         pea $7e7e
         plb : plb
         
-        ldx #$1fff
+        ldx #$1ffe
         
         -
         stz $0000,x
