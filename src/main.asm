@@ -36,15 +36,14 @@ messageboxsetup: {
     lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
     sta $210a
     
-    
+    stz !bg4xscroll
+    stz !bg4yscroll
     
     ;maybe color math settings too
     ;maybe hdma
     ;maybe disable other layers
     
     rep #$20
-    
-    ;need bg4 tilemap buffer. at $7ef700
     
     lda !messageboxindex
     jsl msg_boxwrite
@@ -65,8 +64,8 @@ newgame: {
     ;load level
     ;load enemies
     
-    lda #$0002
-    ldx #$000e
+    lda #$0001
+    ldx #$0003
     jsl msg_call
     
     rts

@@ -132,8 +132,6 @@ init: {
         sta !bg2xscroll
         sta !bg3xscroll
         sta !bg3xscroll
-        sta !bg4xscroll
-        sta !bg4xscroll
         
         sta !bg1yscroll
         sta !bg1yscroll
@@ -141,9 +139,12 @@ init: {
         sta !bg2yscroll
         sta !bg3yscroll
         sta !bg3yscroll
-        sta !bg4yscroll
-        sta !bg4yscroll
+        
+        stz !bg4yscroll
+        stz !bg4xscroll
         rep #$20
+        
+        
     }
     
     .ppu: {
@@ -195,6 +196,7 @@ init: {
     
     jsr enablenmi
     jsr waitfornmi
+    jsr screenon
     
     ;fall through to main
 }

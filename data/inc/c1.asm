@@ -25,8 +25,8 @@ test: {
             incbin ./data/tilemaps/layer3_2.map
             
         ..4:
-            incbin ./data/tilemaps/layer4_1.map
             incbin ./data/tilemaps/layer4_2.map
+            incbin ./data/tilemaps/layer4_1.map
     }
     
     .gfx:

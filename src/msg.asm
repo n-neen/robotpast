@@ -24,6 +24,23 @@ msg: {
     }
     
     
+    .clearbuffer: {
+        phb
+        
+        pea.w !msgtilemapbufferbank
+        plb : plb
+        
+        ldx #!msgtilemapbuffersize
+        
+        -
+        stz !msgtilemapbuffershort,x
+        dex : dex
+        bpl -
+        
+        plb
+        rtl
+    }
+    
     
     .boxwait: {
         ;wait for user to read and press a button
@@ -73,15 +90,15 @@ msg: {
         phx
         phy
         
-        phk
-        plb
+        pea.w !msgboxbankshort<<8
+        plb : plb
         
         stz !messageboxlength
         
         lda !messageboxindex
         asl
         tax
-        lda msg_boxlist,x
+        lda msgbox_list,x
         tay
         ;y = ptr to box
         
@@ -118,37 +135,4 @@ msg: {
         rtl
     }
     
-    
-    .boxlist: {
-        dw msg_boxdef_blankrow          ;0
-        dw msg_boxdef_test1             ;1
-        dw msg_boxdef_test2             ;2
-    }
-    
-              ;"th message is 32 characters long"
-    .boxdef: {
-        ..blankrow: {
-            db "                                "
-            db !msgboxterminator
-        }
-        
-        ..test1: {
-            db "1 this is some words....       1"
-            db "2 see these words!!!!          2"
-            db "3 see these words!!!!!!!!!!!!! 3"
-            db "4 this is some words....       4"
-            db "5 this is      words....       5"
-            db "6 this is some words....       6"
-            db "7 this is      words....       7"
-            db "8 this is some words....       8"
-            db "9 this is      words....       9"
-            db !msgboxterminator
-        }
-        
-        ..test2: {
-            db "        DIFFERENT WORDS         "
-            db "                DIFFERENT PLACE "
-            db !msgboxterminator
-        }
-    }
 }

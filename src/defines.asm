@@ -69,16 +69,12 @@
 !scrolltimer        =       !scrollstart+50 ;timer for how long to wait on title before autoscroll
 
 
-
-
-
-!messageboxstart                    =       $1e00
+!messageboxstart                    =       $f0
 !messageboxuploadflag               =       !messageboxstart+0
 !messageboxlength                   =       !messageboxstart+2
 !messageboxstate                    =       !messageboxstart+4
 !messageboxindex                    =       !messageboxstart+6
 !messageboxstartingposition         =       !messageboxstart+8
-
 
 ;============================================= 7e ==========================================
 
@@ -86,7 +82,7 @@
 !msgtilemapbufferlong    =        $7ef700
 !msgtilemapbuffershort   =        $f700
 !msgtilemapbufferbank    =        $7e
-   
+!msgtilemapbuffersize    =        $0800
 
 
 
@@ -115,8 +111,16 @@
 
 ;constants for module banks
 
-!testbankshort       =      (test&$7f0000)>>16              ;title screen graphics and tilemaps
-!plotbankshort       =      (plot&$7f0000)>>16              ;dot plotter module
+;!testbankshort       =      (test&$ff0000)>>16              ;title screen graphics and tilemaps
+;!msgboxbankshort     =      (msgbox&$ff0000)>>16
+
+!testbanklong           =   (test&$ff0000)
+!testbankword           =   !testbanklong>>8
+!testbankshort          =   !testbanklong>>16
+
+!msgboxbanklong           =   (msgbox&$ff0000)
+!msgboxbankword           =   !msgboxbanklong>>8
+!msgboxbankshort          =   !msgboxbanklong>>16
 
 ;game states
 

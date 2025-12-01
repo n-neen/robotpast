@@ -28,6 +28,7 @@ hirom
 incsrc "./src/defines.asm"
 
 org $c00000
+    incsrc "./src/msg_boxes.asm"
     print "end $c0: ", pc
 
 org $808000
@@ -39,7 +40,7 @@ org $808000
     print "end $80: ", pc
     
 org $c10000
-    incsrc "./data/inc/c1.asm"
+    incsrc "./data/inc/c1.asm"      ;title screen graphics, palette, and tilemaps
     print "end $c1: ", pc
     
 org $c20000
@@ -77,7 +78,7 @@ org $80ffc0
 
 header: {
                                         ;game header
-    db "newgame              "          ;cartridge name
+    db "robot past           "          ;cartridge name
     db $31                              ;fastrom, hirom
     db $02                              ;rom + ram + sram
     db $09                              ;rom size = 512k

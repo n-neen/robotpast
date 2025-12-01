@@ -1,5 +1,5 @@
 gfxtest: {
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #$0000
@@ -17,7 +17,7 @@ gfxtest: {
 
 
 gfxtest4: {
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #!bg4tiles
@@ -44,7 +44,7 @@ paltest: {
     lda.w #test_pal
     sta !dmasrcptr
     
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank    
     
     lda.w #$0200
@@ -57,7 +57,7 @@ paltest: {
 }
 
 tilemaptest1: {                  ;2x2
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #!bg1tilemap
@@ -75,7 +75,7 @@ tilemaptest1: {                  ;2x2
 }
 
 tilemaptest2: {                 ;2x2
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #!bg2tilemap
@@ -93,7 +93,7 @@ tilemaptest2: {                 ;2x2
 }
 
 tilemaptest3: {                 ;2x2
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #!bg3tilemap
@@ -112,7 +112,7 @@ tilemaptest3: {                 ;2x2
 
 
 tilemaptest4: {                 ;2x1
-    lda.w !testbankshort<<8
+    lda.w #!testbankshort
     sta !dmasrcbank
     
     lda.w #!bg4tilemap
