@@ -18,6 +18,7 @@
 !screenbrightness       = $48
 !controller             = $4a
 !startbuttondestmode    = $4c   ;game state to advance to when start is pressed
+!returnstate            = $4e
 
 !controllertimer                = $5e
 !controllerpressedbuttonsarray  = $60
@@ -68,6 +69,12 @@
 
 !scrolltimer        =       !scrollstart+50 ;timer for how long to wait on title before autoscroll
 
+!colormathstart     =       $e0                 ;size
+!mainscreen         =       !colormathstart+0   ;1
+!subscreen          =       !colormathstart+1   ;1
+!colormathlayers    =       !colormathstart+2   ;1
+!colormathenable    =       !colormathstart+3   ;1
+!colormathmode      =       !colormathstart+4   ;2
 
 !messageboxstart                    =       $f0
 !messageboxuploadflag               =       !messageboxstart+0

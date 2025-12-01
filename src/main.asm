@@ -1,5 +1,7 @@
 
 main: {
+    jsr colormathhandler
+    
     lda !gamestate
     asl
     tax
@@ -19,9 +21,59 @@ main: {
     }
 }
 
+colormathhandler: {
+    lda !colormathmode
+    asl
+    tax
+    
+    sep #$20
+    jsr (colormathhandler_statetable,x)
+    rep #$20
+    
+    rts
+    
+    .statetable: {
+        dw colormathhandler_titlescreen      ;$0
+        dw colormathhandler_messagebox       ;$1
+    }
+    
+    .titlescreen: {
+        
+        lda #%00001001          ;main screen
+        sta !mainscreen
+        
+        lda #%00000110          ;sub screen
+        sta !subscreen
+        
+        lda #%10110111          ;color math layers
+        sta !colormathlayers
+        
+        lda #%00000011          ;enable color math
+        sta !colormathenable
+        
+        rts
+    }
+    
+    .messagebox: {
+        
+        lda #%00001000          ;main screen
+        sta !mainscreen
+    
+        lda #%00000111          ;sub screen
+        sta !subscreen
+        
+        lda #%10110111          ;color math layers
+        sta !colormathlayers
+        
+        lda #%00000011          ;enable color math
+        sta !colormathenable
+        
+        rts
+    }
+}
+
+
 messagebox: {
-    lda #$0001
-    sta !messageboxuploadflag
     
     jsl msg_boxwait
     
@@ -39,11 +91,10 @@ messageboxsetup: {
     stz !bg4xscroll
     stz !bg4yscroll
     
-    ;maybe color math settings too
-    ;maybe hdma
-    ;maybe disable other layers
-    
     rep #$20
+    
+    lda #$0001
+    sta !colormathmode
     
     lda !messageboxindex
     jsl msg_boxwrite
@@ -64,9 +115,15 @@ newgame: {
     ;load level
     ;load enemies
     
+    lda !gamestate
+    sta !returnstate
+    
     lda #$0001
     ldx #$0003
     jsl msg_call
+    
+    ;lda !kstategameplay
+    ;sta !gamestate
     
     rts
 }
@@ -91,21 +148,7 @@ splashsetup: {
     jsl gfxtest4
     jsl paltest
     
-    sep #$20
-    
-    lda #%00001001          ;main screen
-    sta $212c
-    
-    lda #%00000110          ;sub screen
-    sta $212d
-    
-    lda #%10110111          ;color math layers
-    sta $2131
-    
-    lda #%00000011          ;enable color math
-    sta $2130
-    
-    rep #$20
+    stz !colormathmode
     
     jsr waitfornmi
     jsr screenon
@@ -577,6 +620,18 @@ updatescrolls: {
     sta $2114
     lda !bg4yscroll+1
     sta $2114
+    
+    lda !mainscreen
+    sta $212c
+    
+    lda !subscreen
+    sta $212d
+    
+    lda !colormathlayers
+    sta $2131
+    
+    lda !colormathenable
+    sta $2130
     
     plp
     rts

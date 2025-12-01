@@ -6,6 +6,8 @@ game: {
         ;handle enemies
         ;scroll, load level
         
+        ;call messagebox scripts
+        
         rtl
     }
 }

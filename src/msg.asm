@@ -23,6 +23,39 @@ msg: {
         rtl
     }
     
+    .runscript: {
+        ;call from gameplay
+        
+        ;arguments:
+        ;x = script pointer
+        
+        phb
+        phy
+        
+        pea.w !msgboxbankshort<<8       ;this is a hirom bank!
+        plb : plb                       ;no fast ram!
+        
+        lda !kstategameplay
+        sta.l $7e0000|!returnstate
+        
+        -
+        lda $0000,x
+        and #$00ff
+        cmp #$00ff
+        beq +
+        phx
+        ldx #$0000
+        jsl msg_call
+        plx
+        inx
+        bra -
+        
+        +
+        ply
+        plb
+        rtl
+    }
+    
     
     .clearbuffer: {
         phb
@@ -48,7 +81,13 @@ msg: {
         ;while (not button) do:
             ;nothing i guess
         
+        lda !controller
+        beq +
         
+        lda !returnstate
+        sta !gamestate
+        
+        +
         rtl
     }
     
@@ -127,6 +166,9 @@ msg: {
         sbc !messageboxstartingposition
         lsr
         sta !messageboxlength
+        
+        lda #$0001
+        sta !messageboxuploadflag
         
         ply
         plx
