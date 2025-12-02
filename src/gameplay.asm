@@ -10,7 +10,9 @@ game: {
         
         ;bug: goes right from 1 to 4
         
-        ;jsl msg_clear
+        jsl msg_clear
+        
+        jsl waitfornmi_long
         
         ldx.w #msgbox_scripts_1
         jsl msg_runscript

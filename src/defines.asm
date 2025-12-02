@@ -158,6 +158,7 @@
 
 !msgboxterminator       =       $9f
 !kmessageboxtimermax    =       $0040
+!kbg4blanktile          =       $0080
 
 
 ;================================ vram address constants ===================================

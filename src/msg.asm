@@ -1,19 +1,10 @@
 msg: {
-    ;high level calls will do:
-    ;   lda index
-    ;   sta !messageboxindex
-    ;   lda !kstatemessageboxsetup
-    ;   sta !gamestate
-    ;maybe we wrap that to make it cleaner
     
-    ;lda index
-    ;jsl msg_call
-    
-    
-    
-    ;new refactored top level routine:
     
     .call: {
+        ;high level messagebox routine
+        ;call from gameplay, or from within a script
+        
         ;argument: a = message box index
         ;          x = starting row
         
@@ -88,11 +79,6 @@ msg: {
     }
     
     .runscript: {
-        ;unimplemented, untested
-        ;don't think it works
-        
-        
-        
         ;call from gameplay
         
         ;arguments:
@@ -144,13 +130,20 @@ msg: {
         
         ldx #!msgtilemapbuffersize
         
+        lda #!kbg4blanktile
         -
-        stz !msgtilemapbuffershort,x
+        sta.w !msgtilemapbuffershort,x
         dex : dex
         bpl -
         
         lda #$0001
         sta !messageboxuploadflag
+        
+        lda #!msgtilemapbuffersize/2
+        sta !messageboxlength
+        
+        lda #$0000
+        sta !messageboxstartingposition
         
         plx
         plb
@@ -175,6 +168,8 @@ msg: {
         jsl waitfornmi_long
         lda !controller
         beq --
+        
+        jsl msg_clear
         
         rts
     }
