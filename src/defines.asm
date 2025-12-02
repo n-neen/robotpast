@@ -82,6 +82,7 @@
 !messageboxstate                    =       !messageboxstart+4
 !messageboxindex                    =       !messageboxstart+6
 !messageboxstartingposition         =       !messageboxstart+8
+!messageboxtimer                    =       !messageboxstart+10
 
 ;============================================= 7e ==========================================
 
@@ -156,6 +157,7 @@
 
 
 !msgboxterminator       =       $9f
+!kmessageboxtimermax    =       $0040
 
 
 ;================================ vram address constants ===================================

@@ -16,8 +16,6 @@ main: {
         dw splash               ;1
         dw newgame              ;2
         dw gameplayvector       ;3
-        dw messageboxsetup      ;4
-        dw messagebox           ;5
     }
 }
 
@@ -38,7 +36,6 @@ colormathhandler: {
     }
     
     .titlescreen: {
-        
         lda #%00001001          ;main screen
         sta !mainscreen
         
@@ -55,7 +52,6 @@ colormathhandler: {
     }
     
     .messagebox: {
-        
         lda #%00001000          ;main screen
         sta !mainscreen
     
@@ -73,41 +69,6 @@ colormathhandler: {
 }
 
 
-messagebox: {
-    
-    jsl msg_boxwait
-    
-    rts
-}
-
-
-messageboxsetup: {
-    jsr screenoff
-    
-    sep #$20
-    lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
-    sta $210a
-    
-    stz !bg4xscroll
-    stz !bg4yscroll
-    
-    rep #$20
-    
-    lda #$0001
-    sta !colormathmode
-    
-    lda !messageboxindex
-    jsl msg_boxwrite
-    
-    lda !kstatemessagebox
-    sta !gamestate
-    
-    jsr screenon
-    
-    rts
-}
-
-
 newgame: {
     ;setup for gameplay
     
@@ -115,15 +76,16 @@ newgame: {
     ;load level
     ;load enemies
     
-    lda !gamestate
-    sta !returnstate
+    jsr waitfornmi
+    jsr screenoff
     
-    lda #$0001
-    ldx #$0003
-    jsl msg_call
+    sep #$20
+    lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
+    sta $210a
+    rep #$20
     
-    ;lda !kstategameplay
-    ;sta !gamestate
+    lda !kstategameplay
+    sta !gamestate
     
     rts
 }
@@ -673,6 +635,10 @@ controllerarray: {
     .updatebuttons: {
         lda !controllertimer
         asl
+        dec : dec
+        stz !controllerpressedbuttonsarray,x
+        inc : inc
+        
         tax
         
         lda !controller
@@ -700,6 +666,11 @@ waitfornmi: {
     } : bne .waitloop
     plp
     rts
+    
+    .long: {
+        jsr waitfornmi
+        rtl
+    }
 }
 
 
@@ -714,6 +685,11 @@ screenon: {         ;turn screen brightness on and disable forced blank
     rep #$20
     pla
     rts
+    
+    .long: {
+        jsr screenon
+        rtl
+    }
 }
 
 
@@ -727,6 +703,11 @@ screenoff: {        ;enable forced blank
     rep #$20
     pla
     rts
+    
+    .long: {
+        jsr screenoff
+        rtl
+    }
 }
 
 
