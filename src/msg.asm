@@ -14,8 +14,11 @@ msg: {
         asl #5
         sta !messageboxstartingposition
         
+        ;scroll screen?
+        
         jsr msg_setup
         jsr msg_wait
+        jsl msg_clear
         
         rtl
     }
@@ -27,8 +30,8 @@ msg: {
         
         sep #$20
         {
-            lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
-            sta $210a
+            ;lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
+            ;sta $210a
             
             lda #%00001000          ;main screen
             sta !mainscreen
@@ -47,6 +50,9 @@ msg: {
             sta $2130
             
             stz !bg4xscroll
+            stz !bg4xscroll
+            
+            stz !bg4yscroll
             stz !bg4yscroll
         }
         rep #$20
@@ -119,8 +125,6 @@ msg: {
     
     
     .clear: {
-        ;currently broken
-        ;but how
         
         phb
         phx
@@ -136,6 +140,11 @@ msg: {
         dex : dex
         bpl -
         
+        
+        ;using these variables for this is kind of a mistake
+        ;todo: paste together another dma routine
+        ;explicitly for clearing the buffer
+        
         lda #$0001
         sta !messageboxuploadflag
         
@@ -143,11 +152,46 @@ msg: {
         sta !messageboxlength
         
         lda #$0000
-        sta !messageboxstartingposition
+        stz !messageboxstartingposition
         
         plx
         plb
         rtl
+    }
+    
+    
+    .scrollup: {
+        -
+        jsl waitfornmi_long
+        lda !bg4yscroll
+        dec
+        dec
+        dec
+        dec
+        dec
+        dec
+        sta !bg4yscroll
+        bpl -
+        
+        rts
+    }
+    
+    
+    .scrolldown: {
+        -
+        jsl waitfornmi_long
+        lda !bg4yscroll
+        inc
+        inc
+        inc
+        inc
+        inc
+        inc
+        sta !bg4yscroll
+        cmp #$00ff
+        bmi -
+        
+        rts
     }
     
     
@@ -156,6 +200,8 @@ msg: {
         
         ;while (not button) do:
             ;nothing i guess
+            
+        ;jsr msg_scrollup
         
         ldx #!kmessageboxtimermax
             
@@ -169,7 +215,7 @@ msg: {
         lda !controller
         beq --
         
-        jsl msg_clear
+        ;jsr msg_scrolldown
         
         rts
     }

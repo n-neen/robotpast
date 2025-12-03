@@ -80,9 +80,16 @@ newgame: {
     jsr screenoff
     
     sep #$20
-    lda.b #%00000000|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x1
+    lda.b #%00000010|(!bg4tilemapshifted<<2)        ;bg4 tilemap = 1x2
     sta $210a
+    
+    stz !bg4yscroll
+    stz $2114
+    stz !bg4yscroll
+    stz $2114
     rep #$20
+    
+    jsl msg_clear
     
     lda !kstategameplay
     sta !gamestate
